@@ -1,0 +1,2 @@
+# clip_id,frames_dir,start_idx,num_frames,label_json_path
+clip_0001,data/SoccerNet-MVFoul/frames/clip_0001,0,64,data/SoccerNet-MVFoul/labels/clip_0001.json
