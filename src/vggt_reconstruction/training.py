@@ -23,7 +23,7 @@ class VGGTFinetuner:
     def __init__(self, config: FinetuneConfig) -> None:
         self.config = config
         self.device = torch.device(config.device if torch.cuda.is_available() else "cpu")
-        self.model = VGGTDepthModel(config.init_model_name).to(self.device)
+        self.model = VGGTDepthModel(config.init_model_name, backend=config.model_backend).to(self.device)
         self.optimizer = AdamW(
             self.model.parameters(),
             lr=config.learning_rate,
@@ -34,12 +34,14 @@ class VGGTFinetuner:
             sequence_length=config.sequence_length,
             frame_stride=config.frame_stride,
             resize_hw=config.resize_hw,
+            resize_mode=config.resize_mode,
         )
         self.val_ds = SoccerNetMVFoulDataset(
             split_file=config.val_manifest,
             sequence_length=config.sequence_length,
             frame_stride=config.frame_stride,
             resize_hw=config.resize_hw,
+            resize_mode=config.resize_mode,
         )
 
     def fit(self) -> None:
@@ -72,7 +74,7 @@ class VGGTFinetuner:
                     target = target.unsqueeze(0)
                 pred_in = frames[frame_idx].unsqueeze(0)
                 with torch.cuda.amp.autocast(enabled=self.config.mixed_precision):
-                    pred = self.model(pred_in).depth
+                    pred = self.model(pred_in).depth[:, 0].unsqueeze(1)
                     pred = F.interpolate(pred, size=target.shape[-2:], mode="bilinear", align_corners=False)
                     loss = F.l1_loss(pred.squeeze(0), target)
 

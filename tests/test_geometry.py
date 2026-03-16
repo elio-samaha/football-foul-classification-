@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from src.vggt_reconstruction.geometry import depth_to_point_cloud
+from src.vggt_reconstruction.geometry import depth_to_point_cloud, world_points_to_point_cloud
 
 
 def test_depth_to_point_cloud_shapes() -> None:
@@ -10,3 +10,11 @@ def test_depth_to_point_cloud_shapes() -> None:
     cloud = depth_to_point_cloud(depth, rgb, fx=1.0, fy=1.0, cx=0.0, cy=0.0)
     assert isinstance(cloud, np.ndarray)
     assert cloud.shape[1] == 6
+
+
+def test_world_points_to_point_cloud_shapes() -> None:
+    world_points = torch.zeros(4, 4, 3)
+    rgb = torch.zeros(3, 4, 4)
+    cloud = world_points_to_point_cloud(world_points, rgb)
+    assert isinstance(cloud, np.ndarray)
+    assert cloud.shape == (16, 6)
