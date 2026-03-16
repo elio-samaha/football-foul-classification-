@@ -1,44 +1,45 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional, Tuple
 
 
 @dataclass
 class ReconstructionConfig:
-    """Configuration for inference-time scene reconstruction."""
+    """Configuration for inference-time scene reconstruction using VGGT."""
 
     dataset_root: Path
-    split_file: Path
     output_root: Path
-    model_name: str = "Intel/dpt-hybrid-midas"
-    sequence_length: int = 8
-    frame_stride: int = 2
-    resize_hw: Tuple[int, int] = (384, 384)
-    confidence_threshold: float = 0.05
+    split: str = "train"
+    vggt_model_name: str = "facebook/VGGT-1B"
+    num_views: int = 2
+    num_frames_per_clip: int = 8
+    frame_stride: int = 4
+    resize_hw: Tuple[int, int] = (518, 518)
+    confidence_threshold: float = 0.5
     device: str = "cuda"
+    dtype: str = "bfloat16"
     save_pointcloud_format: str = "ply"
-    intrinsics_fx: float = 800.0
-    intrinsics_fy: float = 800.0
-    intrinsics_cx: float = 192.0
-    intrinsics_cy: float = 192.0
+    max_actions: Optional[int] = None
 
 
 @dataclass
 class FinetuneConfig:
     """Configuration for optional fine-tuning of the depth backbone."""
 
-    train_manifest: Path
-    val_manifest: Path
+    dataset_root: Path
     checkpoint_dir: Path
-    init_model_name: str = "Intel/dpt-hybrid-midas"
+    vggt_model_name: str = "facebook/VGGT-1B"
+    train_split: str = "train"
+    val_split: str = "valid"
     epochs: int = 10
-    batch_size: int = 2
+    batch_size: int = 1
     learning_rate: float = 1e-5
     weight_decay: float = 1e-4
-    sequence_length: int = 8
-    frame_stride: int = 2
-    resize_hw: Tuple[int, int] = (384, 384)
+    num_frames_per_clip: int = 4
+    frame_stride: int = 8
+    resize_hw: Tuple[int, int] = (518, 518)
     mixed_precision: bool = True
-    num_workers: int = 4
+    num_workers: int = 2
     max_grad_norm: Optional[float] = 1.0
     device: str = "cuda"
+    dtype: str = "bfloat16"
