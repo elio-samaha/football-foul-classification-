@@ -1,0 +1,10 @@
+torch
+torchvision
+torchaudio
+transformers
+opencv-python
+numpy
+SoccerNet
+pyav
+git+https://github.com/facebookresearch/vggt.git
+

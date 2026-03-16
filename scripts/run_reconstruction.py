@@ -9,6 +9,11 @@ def main() -> None:
         dataset_root=Path("data/SoccerNet-MVFoul"),
         split_file=Path("configs/reconstruction_split.csv"),
         output_root=Path("outputs/reconstruction"),
+        # Switch to the real VGGT backbone by setting backend="vggt" and
+        # providing an appropriate model name from the facebookresearch/vggt
+        # repository (e.g. "VGGT_Base" or "VGGT-1B-Commercial").
+        backend="dpt",
+        model_name="Intel/dpt-hybrid-midas",
     )
     ReconstructionPipeline(config).run()
 

@@ -23,7 +23,10 @@ class VGGTFinetuner:
     def __init__(self, config: FinetuneConfig) -> None:
         self.config = config
         self.device = torch.device(config.device if torch.cuda.is_available() else "cpu")
-        self.model = VGGTDepthModel(config.init_model_name).to(self.device)
+        self.model = VGGTDepthModel(
+            model_name=config.init_model_name,
+            backend=config.backend,
+        ).to(self.device)
         self.optimizer = AdamW(
             self.model.parameters(),
             lr=config.learning_rate,

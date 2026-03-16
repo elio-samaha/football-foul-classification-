@@ -18,7 +18,10 @@ class ReconstructionPipeline:
             resize_hw=config.resize_hw,
         )
         self.device = torch.device(config.device if torch.cuda.is_available() else "cpu")
-        self.model = VGGTDepthModel(model_name=config.model_name).to(self.device)
+        self.model = VGGTDepthModel(
+            model_name=config.model_name,
+            backend=config.backend,
+        ).to(self.device)
         self.model.eval()
 
     @torch.no_grad()

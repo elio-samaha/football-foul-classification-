@@ -11,6 +11,7 @@ class ReconstructionConfig:
     split_file: Path
     output_root: Path
     model_name: str = "Intel/dpt-hybrid-midas"
+    backend: str = "dpt"  # 'dpt' (default) or 'vggt'
     sequence_length: int = 8
     frame_stride: int = 2
     resize_hw: Tuple[int, int] = (384, 384)
@@ -31,6 +32,7 @@ class FinetuneConfig:
     val_manifest: Path
     checkpoint_dir: Path
     init_model_name: str = "Intel/dpt-hybrid-midas"
+    backend: str = "dpt"  # 'dpt' (default) or 'vggt'
     epochs: int = 10
     batch_size: int = 2
     learning_rate: float = 1e-5
